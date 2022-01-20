@@ -4,8 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResharperCLIToolsGUI"
+        xmlns:Tree="clr-namespace:ResharperCLIToolsGUI.Tree"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
+    <Window.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type Tree:DirectoryItem}"
+                                  ItemsSource="{Binding Items}">
+            <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
+        </HierarchicalDataTemplate>
+
+        <DataTemplate DataType="{x:Type Tree:FileItem}">
+            <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
+        </DataTemplate>
+    </Window.Resources>
+    
     <DockPanel>
         <Menu DockPanel.Dock="Top" Width="Auto" Height="20">
             <MenuItem Header="File">
@@ -36,7 +48,7 @@
                     </StackPanel>
                 </Border>
             </Grid>
-            <TreeView x:Name="treeView"/>
+            <TreeView x:Name="treeView" ItemsSource="{Binding TreeItems}"/>
         </Grid>
     </DockPanel>
 </Window>

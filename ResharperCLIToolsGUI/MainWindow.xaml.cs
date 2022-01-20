@@ -1,5 +1,8 @@
 ﻿using Microsoft.Win32;
+using ResharperCLIToolsGUI.Tree;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace ResharperCLIToolsGUI
@@ -9,24 +12,41 @@ namespace ResharperCLIToolsGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string? SavedDirectory { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = new MainWindowContext();
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                InitialDirectory = SavedDirectory ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Filter = "Solution File|*.sln",
-                RestoreDirectory = true
+                ValidateNames = true
             };
 
             if (openFileDialog.ShowDialog() != true) 
             {
                 return;
             }
+
+            var file = new FileInfo(openFileDialog.FileName);
+
+            SavedDirectory = file.Directory!.FullName;
+
+            PopulateFileTree(SavedDirectory);
+        }
+
+        private void PopulateFileTree(string filepath)
+        {
+            List<ITreeItem> items = FileTree.GetTreeItems(filepath);
+
+            ((MainWindowContext)DataContext).TreeItems = items;
         }
     }
 }
