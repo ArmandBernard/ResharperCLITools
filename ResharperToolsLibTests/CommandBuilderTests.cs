@@ -27,7 +27,35 @@ namespace ResharperToolsLibTests
         }
 
         [Test]
-        public void Clean_WithMultiplePaths_ReturnsValid()
+        public void Clean_NoPathsSpecified_ReturnsWithNoFilter()
+        {
+            // Arrange
+            var validString = $"jb CleanUpCode \"{Solution}\"";
+            var commandBuilder = new CommandBuilder(Solution);
+
+            // Act
+            var command = commandBuilder.Clean();
+
+            // Assert
+            Assert.AreEqual(command, validString);
+        }
+
+        [Test]
+        public void Clean_OnePath_ReturnsWithValidFilter()
+        {
+            // Arrange
+            var validString = $"jb CleanUpCode \"{Solution}\" --include=\"{Paths[0]}\"";
+            var commandBuilder = new CommandBuilder(Solution);
+
+            // Act
+            var command = commandBuilder.Clean(new[] { Paths[0] });
+
+            // Assert
+            Assert.AreEqual(command, validString);
+        }
+
+        [Test]
+        public void Clean_WithMultiplePaths_ReturnsWithValidFilter()
         {
             // Arrange
             var validString = $"jb CleanUpCode \"{Solution}\" --include=\"{Paths[0]};{Paths[1]}\"";
