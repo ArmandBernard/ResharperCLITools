@@ -2,7 +2,6 @@ using NSubstitute;
 using NUnit.Framework;
 using ResharperToolsLib;
 using System.Collections.Generic;
-using System.IO;
 
 namespace ResharperToolsLibTests
 {
