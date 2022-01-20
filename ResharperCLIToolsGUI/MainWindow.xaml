@@ -9,7 +9,7 @@
         Title="MainWindow" Height="600" Width="800">
     <Window.Resources>
         <HierarchicalDataTemplate DataType="{x:Type Tree:DirectoryItem}"
-                                  ItemsSource="{Binding Items}">
+                                  ItemsSource="{Binding}">
             <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
         </HierarchicalDataTemplate>
 
@@ -48,7 +48,7 @@
                     </StackPanel>
                 </Border>
             </Grid>
-            <TreeView x:Name="treeView" ItemsSource="{Binding TreeItems}"/>
+            <TreeView x:Name="treeView" ItemsSource="{Binding Path=TreeItems}"/>
         </Grid>
     </DockPanel>
 </Window>
