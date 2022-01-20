@@ -5,8 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResharperCLIToolsGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="MainWindow" Height="464" Width="695">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Width="Auto" Height="20">
+            <MenuItem Header="File">
+                <MenuItem Header="Open Solution..."/>
+            </MenuItem>
+        </Menu>
+        <Grid Height="Auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0">
+                File List
+            </TextBlock>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
+            <TextBlock Grid.Column="2">
+                File Preview
+            </TextBlock>
+        </Grid>
+    </DockPanel>
 </Window>
