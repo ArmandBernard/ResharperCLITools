@@ -1,0 +1,1 @@
+jb InspectCode .\ExampleApp.sln -o="inspected.xml"
