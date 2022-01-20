@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleApp", "ExampleApp\ExampleApp.csproj", "{2997176B-C756-4488-912E-8503808E4234}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleApp", "ExampleApp\ExampleApp.csproj", "{2997176B-C756-4488-912E-8503808E4234}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResharperCLIToolsGUI", "ResharperCLIToolsGUI\ResharperCLIToolsGUI.csproj", "{20D24D97-10F8-41AD-A430-9EAA31E3C515}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2997176B-C756-4488-912E-8503808E4234}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2997176B-C756-4488-912E-8503808E4234}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2997176B-C756-4488-912E-8503808E4234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20D24D97-10F8-41AD-A430-9EAA31E3C515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20D24D97-10F8-41AD-A430-9EAA31E3C515}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20D24D97-10F8-41AD-A430-9EAA31E3C515}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20D24D97-10F8-41AD-A430-9EAA31E3C515}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
