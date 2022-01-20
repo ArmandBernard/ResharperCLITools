@@ -8,18 +8,18 @@ namespace ResharperToolsLib
 {
     public class CommandBuilder
     {
-        public FileInfo Solution { get; }
+        public string Solution { get; }
 
-        public CommandBuilder(FileInfo solution)
+        public CommandBuilder(string solution)
         {
             Solution = solution;
         }
 
-        public string Clean(IList<FileInfo> files = null)
+        public string Clean(IList<string> files = null)
         {
             var commandBuilder = new StringBuilder();
 
-            commandBuilder.Append($"jb CleanUpCode \"{Solution.FullName}\"");
+            commandBuilder.Append($"jb CleanUpCode \"{Solution}\"");
 
             if (files == null)
             {
@@ -28,7 +28,7 @@ namespace ResharperToolsLib
 
             commandBuilder.Append(" --include=\"");
 
-            var joinedPaths = string.Join(";", files.Select(f => f.FullName));
+            var joinedPaths = string.Join(";", files);
 
             commandBuilder.Append(joinedPaths);
 
