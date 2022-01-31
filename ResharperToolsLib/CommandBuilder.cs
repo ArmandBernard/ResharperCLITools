@@ -16,7 +16,7 @@ namespace ResharperToolsLib
         {
             var commandBuilder = new StringBuilder();
 
-            commandBuilder.Append($"jb CleanUpCode \"{Solution}\"");
+            commandBuilder.Append($"CleanUpCode \"{Solution}\"");
 
             if (files == null)
             {
