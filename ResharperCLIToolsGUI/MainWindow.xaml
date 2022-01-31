@@ -1,23 +1,22 @@
-﻿<Window x:Class="ResharperCLIToolsGUI.MainWindow"
+﻿<Window x:Name="window" x:Class="ResharperCLIToolsGUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResharperCLIToolsGUI"
-        xmlns:Tree="clr-namespace:ResharperCLIToolsGUI.Tree"
+        xmlns:tree="clr-namespace:ResharperCLIToolsGUI.Tree"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        Title="MainWindow" Height="600" Width="800" Foreground="White" Background="#242424">
     <Window.Resources>
-        <HierarchicalDataTemplate DataType="{x:Type Tree:DirectoryItem}"
-                                  ItemsSource="{Binding}">
+       
+        <HierarchicalDataTemplate DataType="{x:Type tree:DirectoryItem}" ItemsSource="{Binding Items}">
             <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
         </HierarchicalDataTemplate>
 
-        <DataTemplate DataType="{x:Type Tree:FileItem}">
+        <DataTemplate DataType="{x:Type tree:FileItem}">
             <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
         </DataTemplate>
     </Window.Resources>
-    
     <DockPanel>
         <Menu DockPanel.Dock="Top" Width="Auto" Height="20">
             <MenuItem Header="File">
@@ -40,15 +39,19 @@
                 <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
                     <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                         <Button Padding="10 5" Margin="10 10 0 10">
-                            Clean
+                            <TextBlock Background="Transparent">
+                                Clean
+                            </TextBlock> 
                         </Button>
                         <Button Padding="10 5" Margin="10">
-                            Analyse
+                            <TextBlock Background="Transparent">
+                                Analyse
+                            </TextBlock>                            
                         </Button>
                     </StackPanel>
                 </Border>
             </Grid>
-            <TreeView x:Name="treeView" ItemsSource="{Binding Path=TreeItems}"/>
+            <TreeView x:Name="treeView"/>
         </Grid>
     </DockPanel>
 </Window>

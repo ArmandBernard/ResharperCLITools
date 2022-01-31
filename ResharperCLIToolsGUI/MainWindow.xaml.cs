@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ResharperCLIToolsGUI
 {
@@ -47,6 +48,9 @@ namespace ResharperCLIToolsGUI
             List<ITreeItem> items = FileTree.GetTreeItems(filepath);
 
             ((MainWindowContext)DataContext).TreeItems = items;
+
+            // shouldn't have to do this, but I can't get binding working
+            treeView.ItemsSource = ((MainWindowContext)DataContext).TreeItems;
         }
     }
 }
