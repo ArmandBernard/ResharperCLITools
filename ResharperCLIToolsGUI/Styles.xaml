@@ -10,6 +10,9 @@
     <Style TargetType="Grid">
         <Setter Property="Background" Value="#242424"/>
     </Style>
+    <Style TargetType="GridSplitter">
+        <Setter Property="Background" Value="#808080"/>
+    </Style>
     <Style TargetType="Menu">
         <Setter Property="Background" Value="#242424"/>
     </Style>
@@ -18,5 +21,8 @@
     </Style>
     <Style TargetType="Button">
         <Setter Property="Control.Background" Value="#242424"/>
+    </Style>
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="#242424"/>
     </Style>
 </ResourceDictionary>
