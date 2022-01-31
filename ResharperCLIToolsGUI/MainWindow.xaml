@@ -10,11 +10,24 @@
     <Window.Resources>
        
         <HierarchicalDataTemplate DataType="{x:Type tree:DirectoryItem}" ItemsSource="{Binding Items}">
-            <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
+            <StackPanel>
+                <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
+            </StackPanel>            
         </HierarchicalDataTemplate>
 
         <DataTemplate DataType="{x:Type tree:FileItem}">
-            <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Background="White">
+                    <CheckBox IsChecked="{Binding Path=IsChecked}">
+                        <CheckBox.Resources>
+                            <Style TargetType="{x:Type Grid}">
+                                <Setter Property="Background" Value="White"/>
+                            </Style>
+                        </CheckBox.Resources>
+                    </CheckBox>
+                </StackPanel> 
+                <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=Path}" />
+            </StackPanel>
         </DataTemplate>
     </Window.Resources>
     <DockPanel>
@@ -30,7 +43,7 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="2" IsEnabled="False"/>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
             <Grid Grid.Column="2" HorizontalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
@@ -38,15 +51,20 @@
                 </Grid.RowDefinitions>
                 <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
                     <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                        <Button Padding="10 5" Margin="10 10 0 10">
+                        <Button Padding="10 5" Margin="10 10 0 10" Click="CleanAllButton_Click">
+                            <TextBlock Background="Transparent">
+                                Clean All
+                            </TextBlock> 
+                        </Button>
+                        <Button Padding="10 5" Margin="10 10 0 10" Click="CleanButton_Click">
                             <TextBlock Background="Transparent">
                                 Clean
-                            </TextBlock> 
+                            </TextBlock>
                         </Button>
                         <Button Padding="10 5" Margin="10">
                             <TextBlock Background="Transparent">
                                 Analyse
-                            </TextBlock>                            
+                            </TextBlock>
                         </Button>
                     </StackPanel>
                 </Border>
