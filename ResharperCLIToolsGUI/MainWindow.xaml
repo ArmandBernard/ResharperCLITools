@@ -61,7 +61,7 @@
                                 Clean
                             </TextBlock>
                         </Button>
-                        <Button Padding="10 5" Margin="10">
+                        <Button Padding="10 5" Margin="10" Visibility="Hidden">
                             <TextBlock Background="Transparent">
                                 Analyse
                             </TextBlock>
