@@ -1,13 +1,6 @@
 ﻿#nullable enable
 
-namespace ResharperCLIToolsGUI.Config
+namespace ResharperCLIToolsGUI.Models
 {
-    public class ConfigModel
-    {
-        public string[]? RecentSolutions { get; set; }
-
-        public ConfigModel()
-        {
-        }
-    }
+    public record ConfigModel(Solution[] RecentSolutions);
 }

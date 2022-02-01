@@ -8,7 +8,7 @@ using System.Linq;
 using ResharperToolsLib.Logging;
 using ResharperToolsLib.Tree;
 using ResharperToolsLib.Config;
-using ResharperCLIToolsGUI.Config;
+using ResharperCLIToolsGUI.Models;
 
 namespace ResharperCLIToolsGUI
 {
@@ -17,9 +17,20 @@ namespace ResharperCLIToolsGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string? SavedDirectory { get; set; }
+        public Solution? SavedSolution { get; set; }
 
         private ConfigLoader<ConfigModel> ConfigLoader { get; set; }
+
+        private ConfigModel _Config;
+        private ConfigModel Config 
+        {
+            get => _Config;
+            set
+            {
+                _Config = value;
+                ConfigLoader.SaveConfig(value);
+            }
+        }
 
         private ILogger Logger { get; set; }
 
@@ -27,27 +38,38 @@ namespace ResharperCLIToolsGUI
         {
             InitializeComponent();
 
+            DataContext = new MainWindowContext();
+
             Logger = new Logger();
 
             ConfigLoader = new ConfigLoader<ConfigModel>(Logger);
 
-            var configModel = new ConfigModel() { RecentSolutions = Array.Empty<string>() };
+            _Config = new ConfigModel(Array.Empty<Solution>());
 
-            ConfigModel? config = ConfigLoader.ReadConfig(configModel);
+            ConfigModel? config = ConfigLoader.ReadConfig(_Config);
 
             if (config == null)
             {
+                Logger.Fatal("Config incorrectly formatted");
+                Close();
                 return;
             }
 
-            DataContext = new MainWindowContext();
+            Config = config;
+            
+            if (Config.RecentSolutions.Length > 0)
+            {
+                SavedSolution = Config.RecentSolutions[0];
+
+                PopulateFileTree(SavedSolution.Path);
+            }            
         }
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = SavedDirectory ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                InitialDirectory = SavedSolution?.Path ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Filter = "Solution File|*.sln",
                 ValidateNames = true
             };
@@ -59,9 +81,20 @@ namespace ResharperCLIToolsGUI
 
             var file = new FileInfo(openFileDialog.FileName);
 
-            SavedDirectory = file.Directory!.FullName;
+            SavedSolution = new Solution(file.Directory!.FullName, DateTime.Now);
 
-            PopulateFileTree(SavedDirectory);
+            if (Config.RecentSolutions == null)
+            {
+                Config = new ConfigModel(new [] { SavedSolution });
+            }
+            else
+            {
+                // add the saved solution to the start of the list, removing it anywhere else in
+                // the list if it existed
+                Config = new ConfigModel((new[] { SavedSolution }).Concat(Config.RecentSolutions.Where(s => s.Path != SavedSolution.Path)).ToArray());
+            }
+
+            PopulateFileTree(SavedSolution.Path);
         }
 
         private void PopulateFileTree(string filepath)
@@ -76,11 +109,13 @@ namespace ResharperCLIToolsGUI
 
         private void CleanButton_Click(object sender, RoutedEventArgs e)
         {
+            if (SavedSolution == null) { return; }
+
             var commandRunner = new CommandRunner(new Logger());
 
             commandRunner.EnsureToolsInstalled();
 
-            var commandBuilder = new CommandBuilder(SavedDirectory);
+            var commandBuilder = new CommandBuilder(SavedSolution.Path);
 
             var treeItems = ((MainWindowContext) DataContext).TreeItems;
 
@@ -93,11 +128,13 @@ namespace ResharperCLIToolsGUI
 
         private void CleanAllButton_Click(object sender, RoutedEventArgs e)
         {
+            if (SavedSolution == null) { return; }
+
             var commandRunner = new CommandRunner(new Logger());
 
             commandRunner.EnsureToolsInstalled();
 
-            var commandBuilder = new CommandBuilder(SavedDirectory);
+            var commandBuilder = new CommandBuilder(SavedSolution.Path);
 
             var command = commandBuilder.Clean();
 
@@ -112,7 +149,7 @@ namespace ResharperCLIToolsGUI
         /// <returns></returns>
         private IList<ITreeItem> GetFileIf(IList<ITreeItem> items, Predicate<FileItem> filePredicate)
         {
-            List<ITreeItem> itemsN = new List<ITreeItem>();
+            var itemsN = new List<ITreeItem>();
 
             foreach (var item in items)
             {
