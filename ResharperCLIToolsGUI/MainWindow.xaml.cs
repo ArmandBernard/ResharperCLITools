@@ -90,7 +90,7 @@ namespace ResharperCLIToolsGUI
 
             var file = new FileInfo(openFileDialog.FileName);
 
-            LoadSolution(new Solution(file.FullName, DateTime.Now));
+            LoadSolution(new Solution(Path.GetFileNameWithoutExtension(file.Name), file.FullName, DateTime.Now));
 
             PopulateFileTree(file.Directory!.FullName);
         }

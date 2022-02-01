@@ -35,10 +35,10 @@
         <Menu DockPanel.Dock="Top" Width="Auto" Height="20">
             <MenuItem Header="File">
                 <MenuItem x:Name="OpenButton" Header="Open Solution..." Click="OpenButton_Click"/>
-                <MenuItem x:Name="Recents" Header="Recents" Icon="">
+                <MenuItem x:Name="Recents" Header="Recents">
                     <MenuItem.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:Solution}">
-                            <MenuItem Header="{Binding Path}" Click="RecentsItem_Click"/>
+                            <MenuItem Header="{Binding Name}" ToolTip="{Binding Path}" Click="RecentsItem_Click"/>
                         </DataTemplate>
                     </MenuItem.ItemTemplate>                    
                 </MenuItem>
