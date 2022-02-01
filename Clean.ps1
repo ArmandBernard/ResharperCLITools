@@ -1,1 +1,0 @@
-jb CleanUpCode .\ExampleApp.sln
