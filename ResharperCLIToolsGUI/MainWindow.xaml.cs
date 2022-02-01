@@ -7,6 +7,8 @@ using ResharperToolsLib;
 using System.Linq;
 using ResharperToolsLib.Logging;
 using ResharperToolsLib.Tree;
+using ResharperToolsLib.Config;
+using ResharperCLIToolsGUI.Config;
 
 namespace ResharperCLIToolsGUI
 {
@@ -17,9 +19,26 @@ namespace ResharperCLIToolsGUI
     {
         public string? SavedDirectory { get; set; }
 
+        private ConfigLoader<ConfigModel> ConfigLoader { get; set; }
+
+        private ILogger Logger { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            Logger = new Logger();
+
+            ConfigLoader = new ConfigLoader<ConfigModel>(Logger);
+
+            var configModel = new ConfigModel() { RecentSolutions = Array.Empty<string>() };
+
+            ConfigModel? config = ConfigLoader.ReadConfig(configModel);
+
+            if (config == null)
+            {
+                return;
+            }
 
             DataContext = new MainWindowContext();
         }
