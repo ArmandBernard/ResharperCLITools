@@ -1,6 +1,6 @@
 # ResharperTesting
 A project to turn JetBrain's free [Resharper CLI Tools](https://www.jetbrains.com/resharper/features/command-line.html) into a basic GUI.
-![image](https://user-images.githubusercontent.com/25556936/152056662-d4e5ff0d-5019-4a97-87c5-49145ed65ead.png)
+![image](https://user-images.githubusercontent.com/25556936/152058222-8d572b98-7f4d-4045-b36b-d4068bdb04f5.png)
 
 ## Background
 This project exists because I don't want to pay for ReSharper myself, but I also don't want to use my company's JetBrains licenses for personal projects.
