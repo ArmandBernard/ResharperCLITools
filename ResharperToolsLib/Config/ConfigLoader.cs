@@ -28,7 +28,7 @@ namespace ResharperToolsLib.Config
             if (!ConfigExists())
             {
                 Logger.Info("Config does not exist. Creating template config file.");
-                File.WriteAllText(ConfigJsonLocation, CreateTemplateString(templateConfig));
+                File.WriteAllText(ConfigJsonLocation, ConfigToString(templateConfig));
                 Logger.Info(@"Template config file ""appsettings.json"" created.");
                 return templateConfig;
             }
@@ -47,16 +47,30 @@ namespace ResharperToolsLib.Config
             return ParseJson(configJsonString);
         }
 
+        public bool SaveConfig(T config, string? path = null)
+        {
+            try
+            {
+                File.WriteAllText(path ?? ConfigJsonLocation, ConfigToString(config));
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Config could not be saved", ex);
+                return false;
+            }
+            return true;
+        }
+
         public static bool ConfigExists()
         {
             return File.Exists(ConfigJsonLocation);
         }
 
         /// <summary>
-        /// Create a template config string
+        /// Convert a config to string
         /// </summary>
         /// <returns></returns>
-        public static string CreateTemplateString(T templateConfig)
+        public static string ConfigToString(T config)
         {
 
             JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
@@ -65,7 +79,7 @@ namespace ResharperToolsLib.Config
                 NullValueHandling = NullValueHandling.Ignore
             };
 
-            return JsonConvert.SerializeObject(templateConfig, jsonSerializerSettings);
+            return JsonConvert.SerializeObject(config, jsonSerializerSettings);
         }
 
         private T? ParseJson(string configJsonString)
