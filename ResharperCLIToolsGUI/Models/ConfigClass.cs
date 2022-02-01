@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-namespace ResharperToolsLib.Config
+namespace ResharperCLIToolsGUI.Config
 {
     public class ConfigModel
     {

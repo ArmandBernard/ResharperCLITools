@@ -20,7 +20,7 @@ namespace ResharperToolsLib.Config
 
         private ILogger Logger { get; }
 
-        public ConfigModel? ReadConfig()
+        public T? ReadConfig<T>(T templateConfig)
         {
             string? configJsonString = null;
 
@@ -29,9 +29,9 @@ namespace ResharperToolsLib.Config
             if (!ConfigExists())
             {
                 Logger.Info("Config does not exist. Creating template config file.");
-                File.WriteAllText(ConfigJsonLocation, CreateTemplateString());
+                File.WriteAllText(ConfigJsonLocation, CreateTemplateString(templateConfig));
                 Logger.Info(@"Template config file ""appsettings.json"" created. Please edit it and restart.");
-                return null;
+                return default;
             }
 
             try
@@ -42,10 +42,10 @@ namespace ResharperToolsLib.Config
             catch (Exception ex)
             {
                 Logger.Error("Failed to open application settings file.", ex);
-                return null;
+                return default;
             }
 
-            return ParseJson(configJsonString);
+            return ParseJson<T>(configJsonString);
         }
 
         public static bool ConfigExists()
@@ -57,13 +57,8 @@ namespace ResharperToolsLib.Config
         /// Create a template config string
         /// </summary>
         /// <returns></returns>
-        public static string CreateTemplateString()
+        public static string CreateTemplateString<T>(T templateConfig)
         {
-
-            var templateConfig = new ConfigModel()
-            {
-                RecentSolutions = new string[0]
-            };
 
             JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
             {
@@ -74,7 +69,7 @@ namespace ResharperToolsLib.Config
             return JsonConvert.SerializeObject(templateConfig, jsonSerializerSettings);
         }
 
-        private ConfigModel? ParseJson(string configJsonString)
+        private T? ParseJson<T>(string configJsonString)
         {
             JObject configJson;
             try
@@ -84,49 +79,17 @@ namespace ResharperToolsLib.Config
             catch (JsonReaderException ex)
             {
                 Logger.Error("Failed to parse application settings as json.", ex);
-                return null;
+                return default;
             }
 
             try
             {
-                var recentSolutions = configJson.GetObjectInsensitive<string[]>("recentSolutions");
-
-                if (recentSolutions != null)
-                {
-                    var config = new ConfigModel()
-                    {
-                        RecentSolutions = recentSolutions
-                    };
-
-                    return config;
-                }
-
-                var logged = false;
-
-                // compulsory properties
-                new KeyValuePair<string, object?>[]
-                {
-                }.ForEach(prop =>
-                {
-                    if (prop.Value == null)
-                    {
-                        Logger.Error($"{prop.Key} must be provided in the appsettings.json!");
-                        logged = true;
-                    }
-                });
-
-                if (!logged)
-                    throw new Exception(
-                        "There is a mismatch in compulsory config properties!! " +
-                        "Please let the developer know."
-                    );
-
-                return null;
+                return configJson.ToObject<T>();
             }
             catch (Exception ex)
             {
                 Logger.Error("Failed to read values from application settings.", ex);
-                return null;
+                return default;
             }
         }
     }
