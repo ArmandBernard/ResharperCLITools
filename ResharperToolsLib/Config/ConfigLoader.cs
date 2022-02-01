@@ -29,8 +29,8 @@ namespace ResharperToolsLib.Config
             {
                 Logger.Info("Config does not exist. Creating template config file.");
                 File.WriteAllText(ConfigJsonLocation, CreateTemplateString(templateConfig));
-                Logger.Info(@"Template config file ""appsettings.json"" created. Please edit it and restart.");
-                return default;
+                Logger.Info(@"Template config file ""appsettings.json"" created.");
+                return templateConfig;
             }
 
             try
