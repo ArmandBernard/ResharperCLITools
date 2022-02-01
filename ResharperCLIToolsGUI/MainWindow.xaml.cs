@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using ResharperCLIToolsGUI.Tree;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +6,7 @@ using System.Windows;
 using ResharperToolsLib;
 using System.Linq;
 using ResharperToolsLib.Logging;
+using ResharperToolsLib.Tree;
 
 namespace ResharperCLIToolsGUI
 {

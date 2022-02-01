@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ResharperCLIToolsGUI.Tree
+namespace ResharperToolsLib.Tree
 {
     public class DirectoryItem : ITreeItem
     {

@@ -1,4 +1,4 @@
-﻿namespace ResharperCLIToolsGUI.Tree
+﻿namespace ResharperToolsLib.Tree
 {
     public interface ITreeItem
     {

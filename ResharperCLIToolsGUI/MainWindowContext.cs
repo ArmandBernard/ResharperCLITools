@@ -1,4 +1,4 @@
-﻿using ResharperCLIToolsGUI.Tree;
+﻿using ResharperToolsLib.Tree;
 using System.Collections.Generic;
 
 namespace ResharperCLIToolsGUI
