@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using ResharperToolsLib.Logging;
 using Newtonsoft.Json;
@@ -9,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ResharperToolsLib.Config
 {
-    public class ConfigLoader
+    public class ConfigLoader<T>
     {
         public const string ConfigJsonLocation = "./appsettings.json";
 
@@ -20,7 +19,7 @@ namespace ResharperToolsLib.Config
 
         private ILogger Logger { get; }
 
-        public T? ReadConfig<T>(T templateConfig)
+        public T? ReadConfig(T templateConfig)
         {
             string? configJsonString = null;
 
@@ -45,7 +44,7 @@ namespace ResharperToolsLib.Config
                 return default;
             }
 
-            return ParseJson<T>(configJsonString);
+            return ParseJson(configJsonString);
         }
 
         public static bool ConfigExists()
@@ -57,7 +56,7 @@ namespace ResharperToolsLib.Config
         /// Create a template config string
         /// </summary>
         /// <returns></returns>
-        public static string CreateTemplateString<T>(T templateConfig)
+        public static string CreateTemplateString(T templateConfig)
         {
 
             JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
@@ -69,7 +68,7 @@ namespace ResharperToolsLib.Config
             return JsonConvert.SerializeObject(templateConfig, jsonSerializerSettings);
         }
 
-        private T? ParseJson<T>(string configJsonString)
+        private T? ParseJson(string configJsonString)
         {
             JObject configJson;
             try
