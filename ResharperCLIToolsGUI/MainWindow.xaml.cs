@@ -57,11 +57,18 @@ namespace ResharperCLIToolsGUI
 
             Config = config;
             
+            // if there is at least one solution in the history
             if (Config.RecentSolutions.Length > 0)
             {
-                SavedSolution = Config.RecentSolutions[0];
+                var dirPath = Path.GetDirectoryName(Config.RecentSolutions[0].Path);
 
-                PopulateFileTree(SavedSolution.Path);
+                // if the directory is found
+                if (dirPath != null)
+                {
+                    // load it in
+                    SavedSolution = Config.RecentSolutions[0];
+                    PopulateFileTree(dirPath);
+                }                
             }            
         }
 
@@ -81,7 +88,7 @@ namespace ResharperCLIToolsGUI
 
             var file = new FileInfo(openFileDialog.FileName);
 
-            SavedSolution = new Solution(file.Directory!.FullName, DateTime.Now);
+            SavedSolution = new Solution(file.FullName, DateTime.Now);
 
             if (Config.RecentSolutions == null)
             {
@@ -94,7 +101,7 @@ namespace ResharperCLIToolsGUI
                 Config = new ConfigModel((new[] { SavedSolution }).Concat(Config.RecentSolutions.Where(s => s.Path != SavedSolution.Path)).ToArray());
             }
 
-            PopulateFileTree(SavedSolution.Path);
+            PopulateFileTree(file.Directory!.FullName);
         }
 
         private void PopulateFileTree(string filepath)
