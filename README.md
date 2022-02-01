@@ -1,5 +1,5 @@
 # ResharperTesting
-A tool to turn JetBrain's free [Resharper CLI Tools](https://www.jetbrains.com/resharper/features/command-line.html) into a basic GUI.
+A project to turn JetBrain's free [Resharper CLI Tools](https://www.jetbrains.com/resharper/features/command-line.html) into a basic GUI.
 ![image](https://user-images.githubusercontent.com/25556936/152056662-d4e5ff0d-5019-4a97-87c5-49145ed65ead.png)
 
 ## Background
