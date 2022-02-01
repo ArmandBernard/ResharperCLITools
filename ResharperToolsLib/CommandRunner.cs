@@ -28,14 +28,15 @@ namespace ResharperToolsLib
             if (jbExe == null)
             {
                 // install locally
-                var command = $"dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path ./\"{LocalInstallFolder}\"";
+                var command =
+                    $"dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path ./\"{LocalInstallFolder}\"";
 
                 var psi = new ProcessStartInfo("cmd.exe", "/c " + command)
                 {
                     RedirectStandardError = true
                 };
-                
-                var installProcess = Process.Start(psi);           
+
+                var installProcess = Process.Start(psi);
 
                 var errors = installProcess.StandardError.ReadToEnd();
 
@@ -47,6 +48,7 @@ namespace ResharperToolsLib
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -72,6 +74,7 @@ namespace ResharperToolsLib
                     return fullPath;
                 }
             }
+
             return null;
         }
 

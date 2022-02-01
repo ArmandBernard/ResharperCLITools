@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-
 using ResharperToolsLib;
 using System.Linq;
 using ResharperToolsLib.Logging;
@@ -34,7 +33,7 @@ namespace ResharperCLIToolsGUI
                 ValidateNames = true
             };
 
-            if (openFileDialog.ShowDialog() != true) 
+            if (openFileDialog.ShowDialog() != true)
             {
                 return;
             }
@@ -50,10 +49,10 @@ namespace ResharperCLIToolsGUI
         {
             List<ITreeItem> items = FileTree.GetTreeItems(filepath);
 
-            ((MainWindowContext)DataContext).TreeItems = items;
+            ((MainWindowContext) DataContext).TreeItems = items;
 
             // shouldn't have to do this, but I can't get binding working
-            treeView.ItemsSource = ((MainWindowContext)DataContext).TreeItems;
+            treeView.ItemsSource = ((MainWindowContext) DataContext).TreeItems;
         }
 
         private void CleanButton_Click(object sender, RoutedEventArgs e)
@@ -64,7 +63,7 @@ namespace ResharperCLIToolsGUI
 
             var commandBuilder = new CommandBuilder(SavedDirectory);
 
-            var treeItems = ((MainWindowContext)DataContext).TreeItems;
+            var treeItems = ((MainWindowContext) DataContext).TreeItems;
 
             var checkedPaths = GetFileIf(treeItems, (item) => item.IsChecked).Select(item => item.Path).ToArray();
 
@@ -107,7 +106,7 @@ namespace ResharperCLIToolsGUI
                     if (filePredicate(fItem))
                     {
                         itemsN.Add(item);
-                    }                    
+                    }
                 }
             }
 
