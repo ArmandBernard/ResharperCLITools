@@ -4,7 +4,7 @@ namespace ResharperToolsLib.Tree
 {
     public class DirectoryItem : ITreeItem
     {
-        public List<ITreeItem> Items { get; set; }
+        public IList<ITreeItem> Items { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
 

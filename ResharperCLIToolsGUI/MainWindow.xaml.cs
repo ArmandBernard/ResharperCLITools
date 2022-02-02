@@ -68,8 +68,7 @@ namespace ResharperCLIToolsGUI
                 if (dirPath != null)
                 {
                     // load it in
-                    SavedSolution = Config.RecentSolutions[0];
-                    PopulateFileTree(dirPath);
+                    LoadSolution(Config.RecentSolutions[0]);
                 }                
             }            
         }
@@ -90,9 +89,7 @@ namespace ResharperCLIToolsGUI
 
             var file = new FileInfo(openFileDialog.FileName);
 
-            LoadSolution(new Solution(Path.GetFileNameWithoutExtension(file.Name), file.FullName, DateTime.Now));
-
-            PopulateFileTree(file.Directory!.FullName);
+            LoadSolution(new Solution(Path.GetFileNameWithoutExtension(file.Name), file.FullName, DateTime.Now, new List<ITreeItem>()));
         }
 
         private void LoadSolution(Solution solution)
@@ -115,13 +112,13 @@ namespace ResharperCLIToolsGUI
                     // the list if it existed
                     Config = new ConfigModel((new[] { solution }).Concat(Config.RecentSolutions.Where(s => s.Path != solution.Path)).ToArray());
                 }
-                PopulateFileTree(dirPath);
+                PopulateFileTree(dirPath, solution.SelectedFiles);
             }
         }
 
-        private void PopulateFileTree(string filepath)
+        private void PopulateFileTree(string filepath, IList<ITreeItem> savedTreeItems)
         {
-            List<ITreeItem> items = FileTree.GetTreeItems(filepath);
+            var items = FileTree.GetTreeItems(filepath);
 
             ((MainWindowContext) DataContext).TreeItems = items;
 
@@ -207,6 +204,15 @@ namespace ResharperCLIToolsGUI
             }
 
             LoadSolution(solution);
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            //LoadSolution(SavedSolution);
+
+            ConfigLoader.SaveConfig(Config);
+
+            base.OnClosing(e);
         }
     }
 }

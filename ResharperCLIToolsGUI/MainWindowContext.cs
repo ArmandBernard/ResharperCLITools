@@ -5,7 +5,7 @@ namespace ResharperCLIToolsGUI
 {
     public class MainWindowContext
     {
-        public List<ITreeItem> TreeItems { get; set; }
+        public IList<ITreeItem> TreeItems { get; set; }
 
         public MainWindowContext()
         {
