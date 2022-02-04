@@ -31,22 +31,42 @@ namespace ResharperToolsLib
                 var command =
                     $"dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path ./\"{LocalInstallFolder}\"";
 
-                var psi = new ProcessStartInfo("cmd.exe", "/c " + command)
-                {
-                    RedirectStandardError = true
-                };
+                return InstallTools(false);
+            }
+            return true;
+        }
 
-                var installProcess = Process.Start(psi);
+        public bool InstallTools(bool local)
+        {
+            // install locally
+            string command;
+            if (local)
+            {
+                // install locally
+                command =
+                    $"dotnet tool install JetBrains.ReSharper.GlobalTools --tool-path ./\"{LocalInstallFolder}\"";
+            }
+            else
+            {
+                // install globally
+                command = $"dotnet tool install -g JetBrains.ReSharper.GlobalTools";
+            }
 
-                var errors = installProcess.StandardError.ReadToEnd();
+            var psi = new ProcessStartInfo("cmd.exe", "/c " + command)
+            {
+                RedirectStandardError = true
+            };
 
-                installProcess.WaitForExit(10000);
+            var installProcess = Process.Start(psi);
 
-                if (!string.IsNullOrEmpty(errors))
-                {
-                    Logger.Error("Resharper tools failed to install:\n" + errors);
-                    return false;
-                }
+            var errors = installProcess.StandardError.ReadToEnd();
+
+            installProcess.WaitForExit(10000);
+
+            if (!string.IsNullOrEmpty(errors))
+            {
+                Logger.Error("Resharper tools failed to install:\n" + errors);
+                return false;
             }
 
             return true;
