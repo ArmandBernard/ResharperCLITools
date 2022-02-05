@@ -6,37 +6,115 @@ namespace ResharperToolsLibTests
 {
     internal class FileTreeTests
     {
-        private IList<ITreeItem> Tree1 { get; } = new ITreeItem[]
-        {
-            new DirectoryItem("BaseDirectory", ".\\BaseDirectory")
-            {
-                Items = new[]
-                {
-                    new FileItem("File1", ".\\BaseDirectory\\File1")
-                }
-            }
-        };
-
-        private IList<ITreeItem> Tree2 { get; } = new ITreeItem[]
-        {
-            new DirectoryItem("BaseDirectory", ".\\BaseDirectory")
-            {
-                Items = new[]
-                {
-                    new FileItem("File2", ".\\BaseDirectory\\File2")
-                }
-            }
-        };
-
         [Test]
-        public void MergeTrees_TwoDifferentTrees_ReturnsMerged()
+        public void ImportCheckState_NewFileInTree_ReturnsTreeWithNewFile()
         {
-            var merged = FileTree.MergeTrees(Tree1, Tree2);
+            // Arrange
+            var oldTree = new ITreeItem[]
+            {
+                new DirectoryItem("BaseDirectory", ".\\BaseDirectory")
+                {
+                    Items = new[]
+                    {
+                        new FileItem("File1", ".\\BaseDirectory\\File1")
+                    }
+                }
+            };
+
+            var updatedTree = new ITreeItem[]
+            {
+                new DirectoryItem("BaseDirectory", ".\\BaseDirectory")
+                {
+                    Items = new[]
+                    {
+                        new FileItem("File1", ".\\BaseDirectory\\File1"),
+                        new FileItem("File2", ".\\BaseDirectory\\File2")
+                    }
+                }
+            };
+
+            var merged = FileTree.ImportCheckState(updatedTree, oldTree);
 
             Assert.IsTrue(merged.Count == 1, "Expected one tree item at root level");
             Assert.IsAssignableFrom<DirectoryItem>(merged[0]);
             var dir = (DirectoryItem) merged[0];
             Assert.IsTrue(dir.Items.Count == 2, "Expected two files inside first directory");
+        }
+
+        [Test]
+        public void ImportCheckState_RenamedFile_ReturnsCorrectFileOnly()
+        {
+            // Arrange
+            var oldTree = new ITreeItem[]
+            {
+                new DirectoryItem("BaseDirectory", ".\\BaseDirectory")
+                {
+                    Items = new[]
+                    {
+                        new FileItem("File1", ".\\BaseDirectory\\File1")
+                    }
+                }
+            };
+
+            var newFileName = "File2";
+
+            var updatedTree = new ITreeItem[]
+            {
+                new DirectoryItem("BaseDirectory", ".\\BaseDirectory")
+                {
+                    Items = new[]
+                    {
+                        new FileItem(newFileName, ".\\BaseDirectory\\File2")
+                    }
+                }
+            };
+
+            var merged = FileTree.ImportCheckState(updatedTree, oldTree);
+
+            Assert.IsTrue(merged.Count == 1, "Expected one tree item at root level");
+            Assert.IsAssignableFrom<DirectoryItem>(merged[0]);
+            var dir = (DirectoryItem)merged[0];
+            Assert.IsTrue(dir.Items.Count == 1, "Expected one file inside first directory");
+            Assert.IsAssignableFrom<FileItem>(dir.Items[0]);
+            var file = (FileItem)dir.Items[0];
+            Assert.AreEqual(file.Name, newFileName);
+        }
+
+        [Test]
+        public void ImportCheckState_FileWasChecked_CheckStateImported()
+        {
+            // Arrange
+            var oldTree = new ITreeItem[]
+            {
+                new DirectoryItem("BaseDirectory", ".\\BaseDirectory")
+                {
+                    Items = new[]
+                    {
+                        new FileItem("File1", ".\\BaseDirectory\\File1") {IsChecked = true}
+                    }
+                }
+            };
+
+            var updatedTree = new ITreeItem[]
+            {
+                new DirectoryItem("BaseDirectory", ".\\BaseDirectory")
+                {
+                    Items = new[]
+                    {
+                        new FileItem("File1", ".\\BaseDirectory\\File1") {IsChecked = false}
+                    }
+                }
+            };
+
+            var merged = FileTree.ImportCheckState(updatedTree, oldTree);
+
+            Assert.IsTrue(merged.Count == 1, "Expected one tree item at root level");
+            Assert.IsAssignableFrom<DirectoryItem>(merged[0]);
+            var dir = (DirectoryItem)merged[0];
+            Assert.IsTrue(dir.Items.Count == 1, "Expected one file inside first directory");
+            Assert.IsAssignableFrom<FileItem>(dir.Items[0]);
+            var file = (FileItem)dir.Items[0];
+            Assert.IsTrue(file.IsChecked, "Expected file to be checked");
         }
     }
 }
