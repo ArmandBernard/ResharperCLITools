@@ -21,7 +21,7 @@ namespace ResharperToolsLib.Logging
 
         public void Fatal(string message, Exception exception = null)
         {
-            throw new NotImplementedException();
+            Console.Error.WriteLine(formatElements(message, LogLevel.Fatal, exception));
         }
 
         private string formatElements(string message, LogLevel logLevel, Exception exception = null)
