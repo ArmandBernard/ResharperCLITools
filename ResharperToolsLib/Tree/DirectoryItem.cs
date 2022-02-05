@@ -15,5 +15,19 @@ namespace ResharperToolsLib.Tree
 
             Items = new List<ITreeItem>();
         }
+
+        public bool Equals(ITreeItem other)
+        {
+            if (other is not DirectoryItem otherDir)
+            {
+                return false;
+            }
+
+            if (otherDir == null) { return false; }
+
+            if (Name != otherDir.Name || Path != otherDir.Path) { return false; }
+
+            return true;
+        }
     }
 }

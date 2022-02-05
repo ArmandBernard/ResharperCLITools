@@ -1,6 +1,8 @@
-﻿namespace ResharperToolsLib.Tree
+﻿using System;
+
+namespace ResharperToolsLib.Tree
 {
-    public interface ITreeItem
+    public interface ITreeItem : IEquatable<ITreeItem>
     {
         public string Name { get; set; }
         public string Path { get; set; }

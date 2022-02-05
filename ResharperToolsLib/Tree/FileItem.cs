@@ -13,6 +13,20 @@
             Path = path;
             IsChecked = false;
         }
+
+        public bool Equals(ITreeItem other)
+        {
+            if (other is not FileItem otherFile)
+            {
+                return false;
+            }
+
+            if (otherFile == null) { return false; }
+
+            if (Name != otherFile.Name || Path != otherFile.Path) { return false; }
+
+            return true;
+        }
     }
 
 }
