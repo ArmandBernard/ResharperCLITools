@@ -3,6 +3,7 @@ using System.IO;
 using ResharperToolsLib.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ResharperToolsLib.Tree;
 
 #nullable enable
 
@@ -97,7 +98,11 @@ namespace ResharperToolsLib.Config
 
             try
             {
-                return configJson.ToObject<T>();
+                var serializer = new JsonSerializer();
+
+                serializer.Converters.Add(new TreeItemConverter());
+
+                return configJson.ToObject<T>(serializer);
             }
             catch (Exception ex)
             {
