@@ -1,19 +1,18 @@
-using NSubstitute;
+using System.Collections.Generic;
 using NUnit.Framework;
 using ResharperToolsLib;
-using System.Collections.Generic;
 
 namespace ResharperToolsLibTests
 {
     public class CommandBuilderTests
     {
-        private readonly string Solution = ".\\ResharperCLITools.sln";
-
-        private readonly IList<string> Paths = new List<string>()
+        private readonly IList<string> Paths = new List<string>
         {
             "ExampleApp\\OtherClass.cs",
             "ExampleApp\\Program.cs"
         };
+
+        private readonly string Solution = ".\\ResharperCLITools.sln";
 
         [SetUp]
         public void Setup()
@@ -42,7 +41,7 @@ namespace ResharperToolsLibTests
             var commandBuilder = new CommandBuilder(Solution);
 
             // Act
-            var command = commandBuilder.Clean(new[] { Paths[0] });
+            var command = commandBuilder.Clean(new[] {Paths[0]});
 
             // Assert
             Assert.AreEqual(validString, command);
