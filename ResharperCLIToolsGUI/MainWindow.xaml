@@ -19,7 +19,7 @@
         <DataTemplate DataType="{x:Type tree:FileItem}">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Background="White">
-                    <CheckBox IsChecked="{Binding Path=IsChecked}">
+                    <CheckBox IsChecked="{Binding Path=IsChecked}" Checked="CheckBox_CheckChanged" Unchecked="CheckBox_CheckChanged">
                         <CheckBox.Resources>
                             <Style TargetType="{x:Type Grid}">
                                 <Setter Property="Background" Value="White"/>

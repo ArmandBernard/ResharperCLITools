@@ -18,7 +18,7 @@ namespace ResharperCLIToolsGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Solution? SavedSolution { get; set; }
+        public Solution? CurrentSolution { get; set; }
 
         private ConfigLoader<ConfigModel> ConfigLoader { get; set; }
 
@@ -77,7 +77,7 @@ namespace ResharperCLIToolsGUI
         {
             var openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = SavedSolution?.Path ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                InitialDirectory = CurrentSolution?.Path ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Filter = "Solution File|*.sln",
                 ValidateNames = true
             };
@@ -89,7 +89,9 @@ namespace ResharperCLIToolsGUI
 
             var file = new FileInfo(openFileDialog.FileName);
 
-            LoadSolution(new Solution(Path.GetFileNameWithoutExtension(file.Name), file.FullName, DateTime.Now, new List<ITreeItem>()));
+            var savedSolution = Config.RecentSolutions.FirstOrDefault(s => s.Path == file.FullName);
+
+            LoadSolution(savedSolution ?? new Solution(Path.GetFileNameWithoutExtension(file.Name), file.FullName, DateTime.Now, new List<ITreeItem>()));
         }
 
         private void LoadSolution(Solution solution)
@@ -99,8 +101,21 @@ namespace ResharperCLIToolsGUI
             // if the directory is found
             if (dirPath != null)
             {
+                // try to load in files
+                var files = RefetchFiles(solution);
+
+                // cancel if failed
+                if (files == null)
+                {
+                    MessageBox.Show("Failed to load file list");
+                }
+
+                solution = new Solution(solution.Name, solution.Path, solution.LastOpened, files);
+
                 // load it in
-                SavedSolution = solution;
+                CurrentSolution = solution;
+
+                PopulateFileTree(solution.SelectedFiles);
 
                 if (Config.RecentSolutions == null)
                 {
@@ -111,15 +126,40 @@ namespace ResharperCLIToolsGUI
                     // add the saved solution to the start of the list, removing it anywhere else in
                     // the list if it existed
                     Config = new ConfigModel((new[] { solution }).Concat(Config.RecentSolutions.Where(s => s.Path != solution.Path)).ToArray());
-                }
-                PopulateFileTree(dirPath, solution.SelectedFiles);
+                }                
             }
         }
 
-        private void PopulateFileTree(string filepath, IList<ITreeItem> savedTreeItems)
+        private IList<ITreeItem>? RefetchFiles(Solution solution)
         {
-            var items = FileTree.GetTreeItems(filepath);
+            var dirPath = Path.GetDirectoryName(solution.Path);
 
+            // if the directory is found
+            if (dirPath == null)
+            {
+                return null;
+            }
+
+            IList<ITreeItem> scannedTreeItems;
+
+            try
+            {
+                // scan file system for files
+                scannedTreeItems = FileTree.GetTreeItems(dirPath);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Failed to load files", ex);
+
+                return null;
+            }
+
+            // bring in saved check information
+            return FileTree.ImportCheckState(scannedTreeItems, solution.SelectedFiles ?? Array.Empty<ITreeItem>());
+        }
+
+        private void PopulateFileTree(IList<ITreeItem> items)
+        {
             ((MainWindowContext) DataContext).TreeItems = items;
 
             // shouldn't have to do this, but I can't get binding working
@@ -128,13 +168,13 @@ namespace ResharperCLIToolsGUI
 
         private void CleanButton_Click(object sender, RoutedEventArgs e)
         {
-            if (SavedSolution == null) { return; }
+            if (CurrentSolution == null) { return; }
 
             var commandRunner = new CommandRunner(new Logger());
 
             commandRunner.EnsureToolsInstalled();
 
-            var commandBuilder = new CommandBuilder(SavedSolution.Path);
+            var commandBuilder = new CommandBuilder(CurrentSolution.Path);
 
             var treeItems = ((MainWindowContext) DataContext).TreeItems;
 
@@ -147,13 +187,13 @@ namespace ResharperCLIToolsGUI
 
         private void CleanAllButton_Click(object sender, RoutedEventArgs e)
         {
-            if (SavedSolution == null) { return; }
+            if (CurrentSolution == null) { return; }
 
             var commandRunner = new CommandRunner(new Logger());
 
             commandRunner.EnsureToolsInstalled();
 
-            var commandBuilder = new CommandBuilder(SavedSolution.Path);
+            var commandBuilder = new CommandBuilder(CurrentSolution.Path);
 
             var command = commandBuilder.Clean();
 
@@ -213,6 +253,15 @@ namespace ResharperCLIToolsGUI
             ConfigLoader.SaveConfig(Config);
 
             base.OnClosing(e);
+        }
+
+        private void CheckBox_CheckChanged(object sender, RoutedEventArgs e)
+        {
+            //CurrentSolution = new Solution(CurrentSolution.Name, CurrentSolution.Path, CurrentSolution.LastOpened, ((MainWindowContext)DataContext).TreeItems);
+
+            // add the saved solution to the start of the list, removing it anywhere else in
+            // the list if it existed
+            //Config = new ConfigModel((new[] { CurrentSolution }).Concat(Config.RecentSolutions.Where(s => s.Path != CurrentSolution.Path)).ToArray());
         }
     }
 }
