@@ -27,7 +27,7 @@ namespace ResharperToolsLib
 
             commandBuilder.Append(" --include=\"");
 
-            var joinedPaths = string.Join("\" --include=\"", files.Select(p =>
+            var joinedPaths = string.Join("\";\"", files.Select(p =>
                 // get path relative to the solution    
                 Path.IsPathRooted(p) ? Path.GetRelativePath(SolutionDirectory, p) : p
             ));
